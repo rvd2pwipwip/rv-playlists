@@ -13,7 +13,7 @@ class Aggregate extends Component {
   render() {
     return (
       <div style={{ ...defaultStyle, width: "40%", display: "inline-block" }}>
-        <h2>Number Text</h2>
+        <h2>Number Title</h2>
       </div>
     );
   }
