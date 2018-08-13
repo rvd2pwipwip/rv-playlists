@@ -69,21 +69,41 @@ class HoursCounter extends Component {
       (songs, playlist) => songs.concat(playlist.songs),
       []
     );
-    const totalDuration = allSongs.reduce(
-      (total, song) => (total += song.duration),
-      0
-    );
-    console.log(totalDuration);
+    const hours = allSongs.reduce((sum, song) => (sum += song.duration), 0);
+    console.log(allSongs, hours);
     return (
       <div style={{ ...defaultStyle, width: "40%", display: "inline-block" }}>
         <h2>
-          {`${Math.round(totalDuration / 60)} `}
+          {`${Math.round(hours / 60)} `}
           <span style={{ fontWeight: "100" }}>hours</span>
         </h2>
       </div>
     );
   }
 }
+
+// class HoursCounter extends Component {
+//   state = {};
+//   render() {
+//     const allSongs = this.props.playlists.reduce(
+//       (songs, playlist) => songs.concat(playlist.songs),
+//       []
+//     );
+//     const totalDuration = allSongs.reduce(
+//       (total, song) => (total += song.duration),
+//       0
+//     );
+//     console.log(totalDuration);
+//     return (
+//       <div style={{ ...defaultStyle, width: "40%", display: "inline-block" }}>
+//         <h2>
+//           {`${Math.round(totalDuration / 60)} `}
+//           <span style={{ fontWeight: "100" }}>hours</span>
+//         </h2>
+//       </div>
+//     );
+//   }
+// }
 
 class Filter extends Component {
   state = {};
