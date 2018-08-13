@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "../App.css"; //import global css
-// import Aggregate from "./Aggregate";
+// import PlaylistCounter from "./PlaylistCounter";
 // import Filter from "./Filter";
 // import Playlist from "./Playlist";
 
@@ -13,31 +13,73 @@ let fakeServerData = {
     name: "Herve",
     playlists: [
       {
-        name: "rvSpanoushtre",
-        songs: ["1977", "Tren al Sur", "Nada"]
+        name: "Spanoushtre",
+        songs: [
+          { title: "1977", duration: 243 },
+          { title: "Tren al Sur", duration: 324 },
+          { title: "Nada", duration: 356 }
+        ]
       },
       {
-        name: "rvChicaSpanoushtre",
-        songs: ["Amor Sin Fin", "Flaca", "Padre Nuestro"]
+        name: "ChicaSpanoushtre",
+        songs: [
+          { title: "Amor Sin Fin", duration: 243 },
+          { title: "Flaca", duration: 324 },
+          { title: "Padre Nuestro", duration: 356 }
+        ]
       },
       {
         name: "rvChom",
-        songs: ["Hells Bells", "Whole Lotta Love", "Godzilla"]
+        songs: [
+          { title: "Hells Bells", duration: 243 },
+          { title: "Whole Lotta Love", duration: 324 },
+          { title: "Godzilla", duration: 356 }
+        ]
       },
       {
         name: "rvAltern",
-        songs: ["In a Big Country", "Nostalgia", "The Unguarded Moment"]
+        songs: [
+          { title: "In a Big Country", duration: 243 },
+          { title: "Nostalgia", duration: 324 },
+          { title: "The Unguarded Moment", duration: 356 }
+        ]
       }
     ]
   }
 };
 
-class Aggregate extends Component {
+class PlaylistCounter extends Component {
   state = {};
   render() {
     return (
       <div style={{ ...defaultStyle, width: "40%", display: "inline-block" }}>
-        <h2>{this.props.playlists && this.props.playlists.length} Title</h2>
+        <h2>
+          {`${this.props.playlists.length} `}
+          <span style={{ fontWeight: "100" }}>playlists</span>
+        </h2>
+      </div>
+    );
+  }
+}
+
+class HoursCounter extends Component {
+  state = {};
+  render() {
+    const allSongs = this.props.playlists.reduce(
+      (songs, playlist) => songs.concat(playlist.songs),
+      []
+    );
+    const totalDuration = allSongs.reduce(
+      (total, song) => (total += song.duration),
+      0
+    );
+    console.log(totalDuration);
+    return (
+      <div style={{ ...defaultStyle, width: "40%", display: "inline-block" }}>
+        <h2>
+          {`${Math.round(totalDuration / 60)} `}
+          <span style={{ fontWeight: "100" }}>hours</span>
+        </h2>
       </div>
     );
   }
@@ -101,15 +143,15 @@ class App extends Component {
             <h1
               style={{
                 ...defaultStyle,
-                "font-size": "54px",
-                "font-weight": "100"
+                fontSize: "54px",
+                fontWeight: "100"
               }}
             >
               {this.state.serverData.user.name}
               's Playlists
             </h1>
-            <Aggregate playlists={this.state.serverData.user.playlists} />
-            <Aggregate />
+            <PlaylistCounter playlists={this.state.serverData.user.playlists} />
+            <HoursCounter playlists={this.state.serverData.user.playlists} />
             <Filter />
             <Playlist />
             <Playlist />

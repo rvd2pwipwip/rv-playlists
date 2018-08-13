@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import defaultTextColor from "./App";
 
-class Aggregate extends Component {
+class PlaylistCounter extends Component {
   state = {};
   render() {
     return (
@@ -12,4 +12,4 @@ class Aggregate extends Component {
   }
 }
 
-export default Aggregate;
+export default PlaylistCounter;
