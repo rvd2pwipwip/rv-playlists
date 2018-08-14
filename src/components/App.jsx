@@ -87,7 +87,10 @@ class Filter extends Component {
     return (
       <div style={defaultStyle}>
         <img src="" alt="" />
-        <input type="text" />
+        <input
+          type="text"
+          onKeyUp={e => this.props.onFilterChange(e.target.value)}
+        />
       </div>
     );
   }
@@ -121,7 +124,10 @@ class App extends Component {
   //set initial state before component did mount in the constructor
   constructor(props) {
     super(props);
-    this.state = { serverData: {} };
+    this.state = {
+      serverData: {},
+      filterString: ""
+    };
   }
 
   componentDidMount() {
@@ -149,10 +155,20 @@ class App extends Component {
             </h1>
             <PlaylistCounter playlists={this.state.serverData.user.playlists} />
             <HoursCounter playlists={this.state.serverData.user.playlists} />
-            <Filter />
-            {this.state.serverData.user.playlists.map(playlist => (
-              <Playlist playlist={playlist} />
-            ))}
+            <Filter
+              onFilterChange={query => this.setState({ filterString: query })}
+            />
+            {/* filter then render the playlists */}
+            {this.state.serverData.user.playlists
+              .filter(
+                playlist =>
+                  playlist.name
+                    .toLowerCase() //turn playlist name to lower case
+                    .includes(this.state.filterString.toLowerCase()) //compare with lower cased query string
+              )
+              .map(playlist => (
+                <Playlist playlist={playlist} />
+              ))}
           </React.Fragment>
         ) : (
           // if there was no user data at start of ternary, render h3 Loading... instead
