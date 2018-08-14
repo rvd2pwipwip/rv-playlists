@@ -70,7 +70,6 @@ class HoursCounter extends Component {
       []
     );
     const hours = allSongs.reduce((sum, song) => (sum += song.duration), 0);
-    console.log(allSongs, hours);
     return (
       <div style={{ ...defaultStyle, width: "40%", display: "inline-block" }}>
         <h2>
@@ -81,29 +80,6 @@ class HoursCounter extends Component {
     );
   }
 }
-
-// class HoursCounter extends Component {
-//   state = {};
-//   render() {
-//     const allSongs = this.props.playlists.reduce(
-//       (songs, playlist) => songs.concat(playlist.songs),
-//       []
-//     );
-//     const totalDuration = allSongs.reduce(
-//       (total, song) => (total += song.duration),
-//       0
-//     );
-//     console.log(totalDuration);
-//     return (
-//       <div style={{ ...defaultStyle, width: "40%", display: "inline-block" }}>
-//         <h2>
-//           {`${Math.round(totalDuration / 60)} `}
-//           <span style={{ fontWeight: "100" }}>hours</span>
-//         </h2>
-//       </div>
-//     );
-//   }
-// }
 
 class Filter extends Component {
   state = {};
@@ -120,6 +96,7 @@ class Filter extends Component {
 class Playlist extends Component {
   state = {};
   render() {
+    const playlist = this.props.playlist;
     return (
       <div
         style={{
@@ -129,11 +106,11 @@ class Playlist extends Component {
         }}
       >
         <img src="" alt="" />
-        <h3>Playlist Name</h3>
-        <ul>
-          <li>Song 1</li>
-          <li>Song 2</li>
-          <li>Song 3</li>
+        <h3>{playlist.name}</h3>
+        <ul style={{ listStyle: "none" }}>
+          {playlist.songs.map(song => (
+            <li>{`${song.title} ${song.duration}`}</li>
+          ))}
         </ul>
       </div>
     );
@@ -173,9 +150,9 @@ class App extends Component {
             <PlaylistCounter playlists={this.state.serverData.user.playlists} />
             <HoursCounter playlists={this.state.serverData.user.playlists} />
             <Filter />
-            <Playlist />
-            <Playlist />
-            <Playlist />
+            {this.state.serverData.user.playlists.map(playlist => (
+              <Playlist playlist={playlist} />
+            ))}
           </React.Fragment>
         ) : (
           // if there was no user data at start of ternary, render h3 Loading... instead
