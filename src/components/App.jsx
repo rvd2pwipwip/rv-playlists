@@ -138,6 +138,17 @@ class App extends Component {
   }
 
   render() {
+    //first: ternary check for user in serverData
+    const playlistsToRender = this.state.serverData.user
+      ? //if there is data, filter only playlist with filter query in their name
+        this.state.serverData.user.playlists.filter(playlist =>
+          playlist.name
+            .toLowerCase() //turn playlist name to lower case
+            .includes(this.state.filterString.toLowerCase())
+        )
+      : //else return an empty array (no serverData)
+        [];
+
     return (
       <div className="App">
         {/* check if there is user data in serverData before rendering React.Fragment*/}
@@ -153,22 +164,16 @@ class App extends Component {
               {this.state.serverData.user.name}
               's Playlists
             </h1>
-            <PlaylistCounter playlists={this.state.serverData.user.playlists} />
-            <HoursCounter playlists={this.state.serverData.user.playlists} />
+            {/* render only filtered playlist */}
+            <PlaylistCounter playlists={playlistsToRender} />
+            <HoursCounter playlists={playlistsToRender} />
             <Filter
               onFilterChange={query => this.setState({ filterString: query })}
             />
             {/* filter then render the playlists */}
-            {this.state.serverData.user.playlists
-              .filter(
-                playlist =>
-                  playlist.name
-                    .toLowerCase() //turn playlist name to lower case
-                    .includes(this.state.filterString.toLowerCase()) //compare with lower cased query string
-              )
-              .map(playlist => (
-                <Playlist playlist={playlist} />
-              ))}
+            {playlistsToRender.map(playlist => (
+              <Playlist playlist={playlist} />
+            ))}
           </React.Fragment>
         ) : (
           // if there was no user data at start of ternary, render h3 Loading... instead
