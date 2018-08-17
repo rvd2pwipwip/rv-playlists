@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "../App.css"; //import global css
+import queryString from "query-string";
 // import PlaylistCounter from "./PlaylistCounter";
 // import Filter from "./Filter";
 // import Playlist from "./Playlist";
@@ -131,10 +132,16 @@ class App extends Component {
   }
 
   componentDidMount() {
-    //fake server delay
-    setTimeout(() => {
-      this.setState({ serverData: fakeServerData });
-    }, 1000);
+    //use npm module to extract access token from URL
+    const parsed = queryString.parse(window.location.search);
+    const accessToken = parsed.access_token;
+    console.log(accessToken);
+    //fetch returns a promise
+    fetch("https://api.spotify.com/v1/me", {
+      headers: { Authorization: "Bearer " + accessToken }
+    })
+      .then(response => response.json())
+      .then(data => console.log(data));
   }
 
   render() {
@@ -176,8 +183,18 @@ class App extends Component {
             ))}
           </React.Fragment>
         ) : (
-          // if there was no user data at start of ternary, render h3 Loading... instead
-          <h3 style={defaultStyle}>Loading...</h3>
+          // if there was no user data at start of ternary, render Sign in button instead
+          <button
+            onClick={() => (window.location = "http://localhost:8888/login")}
+            style={{
+              padding: "20px",
+              marginTop: "60px",
+              fontSize: 24,
+              fontWeight: 100
+            }}
+          >
+            Sign in with Spotify
+          </button>
         )}
       </div>
     );
