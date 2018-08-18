@@ -136,25 +136,28 @@ class App extends Component {
     const parsed = queryString.parse(window.location.search);
     const accessToken = parsed.access_token;
     console.log(accessToken);
-    //fetch returns a promise
+    //fetch returns a promise of a response that will then be parsed to JSON
     fetch("https://api.spotify.com/v1/me", {
       headers: { Authorization: "Bearer " + accessToken }
     })
       .then(response => response.json())
-      .then(data => console.log(data));
+      // .then(data => console.log(data))
+      .then(data =>
+        this.setState({ serverData: { user: { name: data.display_name } } })
+      );
   }
 
   render() {
-    //first: ternary check for user in serverData
-    const playlistsToRender = this.state.serverData.user
-      ? //if there is data, filter only playlist with filter query in their name
-        this.state.serverData.user.playlists.filter(playlist =>
-          playlist.name
-            .toLowerCase() //turn playlist name to lower case
-            .includes(this.state.filterString.toLowerCase())
-        )
-      : //else return an empty array (no serverData)
-        [];
+    //first: ternary check for user && playlists in serverData
+    const playlistsToRender =
+      this.state.serverData.user && this.state.serverData.user.playlists
+        ? //if there is data, filter only playlist with filter query in their name
+          this.state.serverData.user.playlists.filter(playlist =>
+            playlist.name
+              .toLowerCase() //turn playlist name to lower case
+              .includes(this.state.filterString.toLowerCase())
+          )
+        : []; //else return an empty array (no serverData)
 
     return (
       <div className="App">
