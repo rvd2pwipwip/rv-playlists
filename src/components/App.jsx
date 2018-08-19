@@ -133,8 +133,9 @@ class App extends Component {
 
   componentDidMount() {
     //use npm module to extract access token from URL
-    const parsed = queryString.parse(window.location.search);
-    const accessToken = parsed.access_token;
+    let parsed = queryString.parse(window.location.search);
+    let accessToken = parsed.access_token;
+    if (!accessToken) return;
     console.log(accessToken);
     //fetch returns a promise of a response that will then be parsed to JSON
     fetch("https://api.spotify.com/v1/me", {
@@ -202,7 +203,12 @@ class App extends Component {
         ) : (
           // if there was no user data at start of ternary, render Sign in button instead
           <button
-            onClick={() => (window.location = "http://localhost:8888/login")}
+            // onClick={() => (window.location = "http://localhost:8888/login")}
+            onClick={() => {
+              window.location = window.location.href.includes("localhost")
+                ? "http://localhost:8888/login"
+                : "https://rv-playlists-backend.herokuapp.com/login";
+            }}
             style={{
               padding: "20px",
               marginTop: "60px",
