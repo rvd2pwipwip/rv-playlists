@@ -109,7 +109,7 @@ class Playlist extends Component {
           display: "inline-block"
         }}
       >
-        <img src="" alt="" />
+        <img src={playlist.imageUrl} />
         <h3>{playlist.name}</h3>
         <ul style={{ listStyle: "none" }}>
           {playlist.songs.map(song => (
@@ -149,10 +149,14 @@ class App extends Component {
       .then(response => response.json())
       .then(data =>
         this.setState({
-          playlists: data.items.map(item => ({
-            name: item.name,
-            songs: []
-          }))
+          playlists: data.items.map(item => {
+            console.log(data.items);
+            return {
+              name: item.name,
+              imageUrl: item.images.find(image => image.width == 60).url,
+              songs: []
+            };
+          })
         })
       );
   }
