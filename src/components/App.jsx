@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "../App.css"; //import global css
-import queryString from "query-string";
+// import queryString from "query-string";
 // import PlaylistCounter from "./PlaylistCounter";
 // import Filter from "./Filter";
 // import Playlist from "./Playlist";
@@ -133,8 +133,14 @@ class App extends Component {
 
   componentDidMount() {
     //use npm module to extract access token from URL
-    let parsed = queryString.parse(window.location.search);
-    let accessToken = parsed.access_token;
+
+    // let parsed = queryString.parse(window.location.search);
+    // let accessToken = parsed.access_token;
+
+    //extract access token with vanilla JS
+    let accessToken = new URLSearchParams(window.location.search).get(
+      "access_token"
+    );
     if (!accessToken) return;
     console.log(accessToken);
     //fetch returns a promise of a response that will then be parsed to JSON
