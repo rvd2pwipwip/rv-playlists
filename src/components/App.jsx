@@ -141,18 +141,28 @@ class App extends Component {
       headers: { Authorization: "Bearer " + accessToken }
     })
       .then(response => response.json())
-      // .then(data => console.log(data))
+      .then(data => this.setState({ user: { name: data.display_name } }));
+
+    fetch("https://api.spotify.com/v1/me/playlists", {
+      headers: { Authorization: "Bearer " + accessToken }
+    })
+      .then(response => response.json())
       .then(data =>
-        this.setState({ serverData: { user: { name: data.display_name } } })
+        this.setState({
+          playlists: data.items.map(item => ({
+            name: item.name,
+            songs: []
+          }))
+        })
       );
   }
 
   render() {
     //first: ternary check for user && playlists in serverData
     const playlistsToRender =
-      this.state.serverData.user && this.state.serverData.user.playlists
+      this.state.user && this.state.playlists
         ? //if there is data, filter only playlist with filter query in their name
-          this.state.serverData.user.playlists.filter(playlist =>
+          this.state.playlists.filter(playlist =>
             playlist.name
               .toLowerCase() //turn playlist name to lower case
               .includes(this.state.filterString.toLowerCase())
@@ -162,7 +172,7 @@ class App extends Component {
     return (
       <div className="App">
         {/* check if there is user data in serverData before rendering React.Fragment*/}
-        {this.state.serverData.user ? (
+        {this.state.user ? (
           <React.Fragment>
             <h1
               style={{
@@ -171,7 +181,7 @@ class App extends Component {
                 fontWeight: "100"
               }}
             >
-              {this.state.serverData.user.name}
+              {this.state.user.name}
               's Playlists
             </h1>
             {/* render only filtered playlist */}
